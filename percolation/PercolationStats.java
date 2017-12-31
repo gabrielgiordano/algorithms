@@ -6,6 +6,10 @@ public class PercolationStats {
     private int gridSize;
     private int trials;
     private double[] results;
+    private double mean;
+    private double stddev;
+    private boolean meanCalculated = false;
+    private boolean stddevCalculated = false;
     
     public PercolationStats(int n, int trials) {
         if (n <= 0 || trials <= 0) throw new IllegalArgumentException();
@@ -18,11 +22,19 @@ public class PercolationStats {
     }
     
     public double mean() { 
-        return StdStats.mean(results);
+        if (!meanCalculated) {
+            mean = StdStats.mean(results);
+            meanCalculated = true;
+        }
+        return mean;
     }
     
     public double stddev() { 
-        return StdStats.stddev(results); 
+        if (!stddevCalculated) {
+            stddev = StdStats.stddev(results); 
+            stddevCalculated = true;
+        }
+        return stddev;
     }
     
     public double confidenceLo() { 
@@ -51,7 +63,7 @@ public class PercolationStats {
             int col = StdRandom.uniform(gridSize) + 1;
 
             percolation.open(row, col);
-        } while (!percolation.percolates()) ;
+        } while (!percolation.percolates());
         
         return percolation.numberOfOpenSites() / (double) (gridSize * gridSize);
     }
