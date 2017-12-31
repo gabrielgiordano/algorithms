@@ -5,6 +5,7 @@ public class Percolation {
     private int firstVirtualSiteIndex;
     private int lastVirtualSiteIndex;
     private WeightedQuickUnionUF unionFind;
+    private WeightedQuickUnionUF unionFind2;
     private boolean[] sitesOpen;
     private int numberOfOpenSites;
     
@@ -17,6 +18,8 @@ public class Percolation {
         firstVirtualSiteIndex = numberOfSites;
         lastVirtualSiteIndex = numberOfSites + 1;
         unionFind = new WeightedQuickUnionUF(numberOfSites + 2);
+        unionFind2 = new WeightedQuickUnionUF(numberOfSites + 2);
+        
         sitesOpen = new boolean[numberOfSites];
         numberOfOpenSites = 0;
                 
@@ -26,6 +29,8 @@ public class Percolation {
             
             unionFind.union(firstVirtualSiteIndex, firstRowIndex);
             unionFind.union(lastVirtualSiteIndex, lastRowIndex);
+            
+            unionFind2.union(firstVirtualSiteIndex, firstRowIndex);
         }
     }
     
@@ -45,8 +50,10 @@ public class Percolation {
     }
     
     private void connectNeighbor(int index, int row, int col) {
-        if (isIndexValid(row, col) && isOpen(row, col))
+        if (isIndexValid(row, col) && isOpen(row, col)) { 
             unionFind.union(index, rowColToInt(row, col));
+            unionFind2.union(index, rowColToInt(row, col));
+        }
     }
     
     public boolean isOpen(int row, int col) {
@@ -60,7 +67,7 @@ public class Percolation {
         
         int index = rowColToInt(row, col);
         return isOpen(row, col) && 
-            unionFind.connected(index, firstVirtualSiteIndex);
+            unionFind2.connected(index, firstVirtualSiteIndex);
     }
     
     public int numberOfOpenSites() {
@@ -68,7 +75,16 @@ public class Percolation {
     }
     
     public boolean percolates() {
-        return unionFind.connected(firstVirtualSiteIndex, lastVirtualSiteIndex);
+        return unionFind.connected(firstVirtualSiteIndex, 
+                                   lastVirtualSiteIndex)
+            && checkForUnitaryGrid();
+    }
+    
+    public boolean checkForUnitaryGrid() {
+        if (gridSize == 1)
+            return sitesOpen[0];
+        else
+            return true;
     }
     
     private int rowColToInt(int row, int col) {
