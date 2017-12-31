@@ -80,7 +80,7 @@ public class Percolation {
             && checkForUnitaryGrid();
     }
     
-    public boolean checkForUnitaryGrid() {
+    private boolean checkForUnitaryGrid() {
         if (gridSize == 1)
             return sitesOpen[0];
         else
