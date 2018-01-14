@@ -10,6 +10,8 @@
  * (including construction) in **constant** worst-case time.
 */
 
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdIn;
 import java.util.NoSuchElementException;
 import java.util.Iterator;
 
@@ -143,11 +145,25 @@ public class Deque<Item> implements Iterable<Item> { // 16 bytes overhead
         public void remove() {
             throw new UnsupportedOperationException();
         }
-
     }
 
     // unit testing (optional)
     public static void main(String[] args) {
+        Deque<String> deque = new Deque<String>();
 
+        String[] inputs = StdIn.readAllStrings();
+
+        for (String s : inputs) {
+            deque.addFirst(s);
+            deque.addLast(s);
+        }
+
+        for (int i = 0; i < 2 * inputs.length; i++)
+            StdOut.println(deque.removeLast());
+
+        StdOut.printf("\n");
+
+        for (String s : deque)
+            StdOut.println(s);
     }
 }
